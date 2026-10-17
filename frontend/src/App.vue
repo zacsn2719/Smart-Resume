@@ -1,108 +1,148 @@
 <template>
-  <el-container class="layout">
-    <el-aside width="220px" class="aside">
-      <div class="logo">
-        <div class="logo-title">智配简历</div>
-        <div class="logo-sub">简历-岗位匹配分析系统</div>
+  <div class="shell">
+    <aside class="app-sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <div class="brand-mark">
+            <span class="material-symbols-outlined">assignment_turned_in</span>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title-row">
+              <span class="brand-title">智配简历</span>
+              <span class="brand-pro">PRO</span>
+            </div>
+            <span class="brand-sub">简历-岗位匹配分析系统</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-section">WORKSPACE</div>
+          <router-link
+            v-for="item in workspaceNav"
+            :key="item.path"
+            :to="item.path"
+            class="nav-item"
+            :class="{ active: isActive(item.path) }"
+          >
+            <span class="material-symbols-outlined">{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
+          </router-link>
+
+          <div class="nav-section">ANALYTICS &amp; INSIGHTS</div>
+          <router-link
+            v-for="item in analyticsNav"
+            :key="item.path"
+            :to="item.path"
+            class="nav-item"
+            :class="{ active: isActive(item.path) }"
+          >
+            <span class="material-symbols-outlined">{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
+          </router-link>
+
+          <div class="nav-section">SYSTEM</div>
+          <router-link
+            v-for="item in systemNav"
+            :key="item.path"
+            :to="item.path"
+            class="nav-item"
+            :class="{ active: isActive(item.path) }"
+          >
+            <span class="material-symbols-outlined">{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
+          </router-link>
+        </nav>
       </div>
-      <el-menu
-        :default-active="$route.path"
-        router
-        background-color="#001529"
-        text-color="#bfcbd9"
-        active-text-color="#ffffff"
-      >
-        <el-menu-item index="/">简历管理</el-menu-item>
-        <el-menu-item index="/jobs">岗位管理</el-menu-item>
-        <el-menu-item index="/match">匹配分析</el-menu-item>
-        <el-menu-item index="/history">历史记录</el-menu-item>
-        <el-menu-item index="/stats">统计看板</el-menu-item>
-        <el-menu-item index="/about">关于</el-menu-item>
-      </el-menu>
-    </el-aside>
-    <el-container>
-      <el-header class="header">
-        <span class="header-title">{{ pageTitle }}</span>
-        <span class="header-tip">jieba 分词 · TF-IDF · 余弦相似度</span>
-      </el-header>
-      <el-main class="main">
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-left">
+            <div class="avatar-square">HR</div>
+            <div class="sidebar-user-meta">
+              <span class="sidebar-user-name">HR Manager</span>
+              <span class="sidebar-user-status">
+                <span class="status-dot"></span>在线
+              </span>
+            </div>
+          </div>
+          <button class="icon-btn" title="退出登录" type="button">
+            <span class="material-symbols-outlined">logout</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-header">
+        <div class="breadcrumb">
+          <span class="material-symbols-outlined">home</span>
+          <span class="t-caption">/</span>
+          <span class="t-label-sm" style="color: var(--on-surface)">{{ pageTitle }}</span>
+        </div>
+        <div class="header-right">
+          <div class="header-search">
+            <span class="material-symbols-outlined">search</span>
+            <input
+              type="text"
+              v-model="keyword"
+              placeholder="搜索简历、岗位或匹配记录..."
+              @keyup.enter="onSearch"
+            />
+          </div>
+          <button class="header-bell" title="通知" type="button">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="header-bell-dot"></span>
+          </button>
+          <div class="header-user">
+            <div class="header-user-avatar">
+              <span class="material-symbols-outlined">person</span>
+            </div>
+            <div class="header-user-meta">
+              <span class="header-user-name">招聘专家</span>
+              <span class="header-user-sub">人才甄选部</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="page-main">
         <router-view />
-      </el-main>
-    </el-container>
-  </el-container>
+      </main>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const pageTitle = computed(() => route.meta.title || '智配简历')
+const keyword = ref('')
+
+const workspaceNav = [
+  { path: '/', label: '简历管理', icon: 'description' },
+  { path: '/jobs', label: '岗位管理', icon: 'work' },
+]
+const analyticsNav = [
+  { path: '/match', label: '匹配分析', icon: 'hub' },
+  { path: '/history', label: '历史记录', icon: 'history' },
+  { path: '/stats', label: '统计看板', icon: 'bar_chart' },
+]
+const systemNav = [{ path: '/about', label: '关于系统', icon: 'info' }]
+
+const pageTitle = computed(() => route.meta.title || '控制台中心')
+
+function isActive(path) {
+  return route.path === path
+}
+
+function onSearch() {
+  /* global search is a presentation placeholder in the design */
+}
 </script>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#app {
-  height: 100%;
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
-}
-
-.layout {
-  height: 100%;
-}
-
-.aside {
-  background-color: #001529;
-}
-
-.logo {
-  height: 90px;
-  padding: 20px 20px 0;
-  color: #fff;
-}
-
-.logo-title {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.logo-sub {
-  margin-top: 6px;
-  font-size: 12px;
-  color: #8ca0b3;
-}
-
-.aside .el-menu {
-  border-right: none;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fff;
-  border-bottom: 1px solid #e6e6e6;
-}
-
-.header-title {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.header-tip {
-  font-size: 12px;
-  color: #909399;
-}
-
-.main {
-  background: #f0f2f5;
+<style scoped>
+.shell {
+  min-height: 100vh;
 }
 </style>

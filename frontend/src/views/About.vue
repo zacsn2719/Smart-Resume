@@ -187,7 +187,7 @@
             <p class="t-caption c-secondary">敏捷开发团队角色分配与模块责任人</p>
           </div>
         </div>
-        <span class="row-gap-xs t-caption c-secondary"><span class="material-symbols-outlined" style="font-size:16px">info</span>请按小组实际情况修改 src/views/About.vue 中的成员与分工</span>
+        <span class="row-gap-xs t-caption c-secondary"><span class="material-symbols-outlined" style="font-size:16px">info</span>请按小组实际情况修改成员与分工</span>
       </div>
 
       <div class="table-wrap">

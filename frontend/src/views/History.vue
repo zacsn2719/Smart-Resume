@@ -337,12 +337,14 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '../api'
 import { formatTime, formatDate, formatClock, levelColor, levelPill } from '../utils/format'
+import { normalizeKeyword } from '../utils/search'
 
 const router = useRouter()
+const route = useRoute()
 
 const all = ref([])
 const view = ref('table')
@@ -447,5 +449,21 @@ const exportCsv = () => {
   ElMessage.success('已导出历史报告')
 }
 
-onMounted(load)
+// 支持全局搜索结果跳转携带 ?q= 预填页面搜索框
+const applyQuerySearch = () => {
+  const q = normalizeKeyword(route.query.q)
+  if (q) search.value = q
+}
+
+onMounted(() => {
+  load()
+  applyQuerySearch()
+})
+
+watch(
+  () => route.query.q,
+  () => {
+    if (route.path === '/history') applyQuerySearch()
+  }
+)
 </script>

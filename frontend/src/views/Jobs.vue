@@ -303,12 +303,14 @@
 
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '../api'
 import { formatTime, extractSkillHints } from '../utils/format'
+import { normalizeKeyword } from '../utils/search'
 
 const router = useRouter()
+const route = useRoute()
 
 const form = reactive({ title: '', company: '', degree: '本科', exp: '3', text: '' })
 const allJobs = ref([])
@@ -444,8 +446,22 @@ const exportCsv = () => {
   ElMessage.success('已导出 CSV 文件')
 }
 
+// 支持全局搜索结果跳转携带 ?q= 预填页面搜索框
+const applyQuerySearch = () => {
+  const q = normalizeKeyword(route.query.q)
+  if (q) search.value = q
+}
+
 onMounted(() => {
   load()
   loadStats()
+  applyQuerySearch()
 })
+
+watch(
+  () => route.query.q,
+  () => {
+    if (route.path === '/jobs') applyQuerySearch()
+  }
+)
 </script>

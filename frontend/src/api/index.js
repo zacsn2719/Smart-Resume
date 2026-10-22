@@ -2,9 +2,10 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://smart-resume-fy41.onrender.com/api',
   timeout: 15000
 })
+
 
 api.interceptors.response.use(
   (res) => res,
